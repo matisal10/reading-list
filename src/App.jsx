@@ -28,10 +28,10 @@ function App() {
     maxAndMinPages()
   }, [])
 
-  const addBooks = (title) => {
-    setSelectedBookTitle(title)
-    setReading(reading + 1)
-  }
+  // const addBooks = (title) => {
+  //   setSelectedBookTitle(title)
+  //   setReading(reading + 1)
+  // }
 
   const handleGenreFilter = (event) => {
     const selectedGenreValue = event.target.value;
@@ -74,15 +74,12 @@ function App() {
 
   const handleAddToReadingList = (book) => {
     setSelectedBookTitle(book.book.title);
-    // Verificar si el libro no está en la lista de libros deshabilitados
     if (!disabledBooks.includes(book.book.title)) {
       setReading(reading + 1);
       setDisabledBooks([...disabledBooks, book.book.title]);
     }
 
-
   };
-
 
   return (
     <div className='container'>
@@ -118,6 +115,7 @@ function App() {
               placeholder='Select option'
               size={'sm'}
               onChange={handleGenreFilter}
+              color='white'
             >
               <option value=''>Todos</option>
               <option value='Fantasía'>Fantasía</option>
