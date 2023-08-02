@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../books.json';
-import { CloseButton } from '@chakra-ui/react'
+import { CloseButton } from '@chakra-ui/react';
 
-
-const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) => {
+const ReadingList = ({ searchValue, onRemoveBook }) => {
     const [arrayBooks, setArrayBooks] = useState([]);
     const [shouldUpdate, setShouldUpdate] = useState(false);
 
@@ -19,7 +18,7 @@ const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) =>
             setArrayBooks([]);
             setShouldUpdate(!shouldUpdate); 
         }
-    }, [searchValue, arrayBooks,shouldUpdate]);
+    }, [searchValue, arrayBooks, shouldUpdate]);
 
 
     const deleteBook = (title) => {
@@ -27,7 +26,7 @@ const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) =>
         setArrayBooks(updatedArrayBooks);
         onRemoveBook(title);
         setShouldUpdate(!shouldUpdate);
-    }
+    };
     
 
     return (
@@ -36,13 +35,13 @@ const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) =>
             {arrayBooks.length > 0 ? (
                 <div className='containerList'>
                     {
-                        arrayBooks.map((b, i) => (
+                        arrayBooks.map((book, i) => (
                             <div key={i} style={{ padding: "10px 5px 5px 5px" }}>
                                 <div className='containerIcon'>
-                                    <CloseButton size='sm' onClick={() => deleteBook(b.book.title)} />
+                                    <CloseButton size='sm' onClick={() => deleteBook(book.book.title)} />
                                 </div>
 
-                                <img src={b.book.cover} alt={b.book.title} width={120} style={{ height: '160px' }} />
+                                <img src={book.book.cover} alt={book.book.title} width={120} style={{ height: '160px' }} />
                             </div>
                         ))
                     }
@@ -53,7 +52,5 @@ const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) =>
         </div>
     );
 };
-
-
 
 export default ReadingList;
