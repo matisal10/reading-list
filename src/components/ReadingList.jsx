@@ -3,8 +3,9 @@ import api from '../books.json';
 import { CloseButton } from '@chakra-ui/react'
 
 
-const ReadingList = ({ searchValue, onAddBook }) => {
+const ReadingList = ({ searchValue, onAddBook, onRemoveBook, disabledBooks }) => {
     const [arrayBooks, setArrayBooks] = useState([]);
+    const [shouldUpdate, setShouldUpdate] = useState(false);
 
     useEffect(() => {
         if (searchValue.trim() !== '') {
@@ -16,19 +17,23 @@ const ReadingList = ({ searchValue, onAddBook }) => {
             }
         } else {
             setArrayBooks([]);
+            setShouldUpdate(!shouldUpdate); 
         }
-    }, [searchValue, arrayBooks]);
+    }, [searchValue, arrayBooks,shouldUpdate]);
 
 
     const deleteBook = (title) => {
         const updatedArrayBooks = arrayBooks.filter((book) => book.book.title !== title);
         setArrayBooks(updatedArrayBooks);
+        onRemoveBook(title);
+        setShouldUpdate(!shouldUpdate);
     }
+    
 
     return (
         <div className='containerReading'>
             <h1>Lista de lectura</h1>
-            {arrayBooks ? (
+            {arrayBooks.length > 0 ? (
                 <div className='containerList'>
                     {
                         arrayBooks.map((b, i) => (

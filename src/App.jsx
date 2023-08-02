@@ -72,20 +72,24 @@ function App() {
     setFilterArray(filterArray);
   };
 
+  const handleRemoveFromReadingList = (title) => {
+    setReading(reading - 1);
+    setDisabledBooks(disabledBooks.filter((bookTitle) => bookTitle !== title));
+  };
+
   const handleAddToReadingList = (book) => {
     setSelectedBookTitle(book.book.title);
     if (!disabledBooks.includes(book.book.title)) {
       setReading(reading + 1);
       setDisabledBooks([...disabledBooks, book.book.title]);
     }
-
   };
 
   return (
     <div className='container'>
       <div>
         <div style={{ paddingLeft: "10px" }}>
-          <h1>{books.length} Libros disponibles</h1>
+          <h1>{books.length - disabledBooks.length} Libros disponibles</h1>
           {
             reading > 0 ?
               <h3 style={{ paddingLeft: "10px" }}>{reading} en lista de lectura</h3>
@@ -99,8 +103,8 @@ function App() {
             <span>Filtro por páginas</span>
             <Slider
               aria-label='slider-ex-1'
-              defaultValue={10000}
-              min={minPages} max={10000} step={100}
+              defaultValue={1000}
+              min={minPages} max={1000} step={50}
               onChange={(value) => handlePagesFilter(value)}
             >
               <SliderTrack>
@@ -137,7 +141,14 @@ function App() {
         </div>
       </div>
 
-      {selectedBookTitle && <ReadingList searchValue={selectedBookTitle} onAddBook={handleAddToReadingList} />}
+      {reading > 0 && (
+        <ReadingList
+          searchValue={selectedBookTitle}
+          onAddBook={handleAddToReadingList}
+          onRemoveBook={handleRemoveFromReadingList}
+          disabledBooks={disabledBooks}
+        />
+      )}
     </div>
   )
 }
