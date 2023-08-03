@@ -1,31 +1,40 @@
-import { useState, useEffect } from 'react';
-import './App.css';
-import api from "./books.json";
-import { Select } from '@chakra-ui/react';
+import { useState, useEffect } from 'react'
+import './App.css'
+import api from "./books.json"
+import { Select } from '@chakra-ui/react'
 import {
   Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-} from '@chakra-ui/react';
-
+} from '@chakra-ui/react'
 import ReadingList from './components/ReadingList';
-
 function App() {
-  const [books] = useState(api.library);
-  const [filterArray, setFilterArray] = useState([]);
-  const [reading, setReading] = useState(0);
+  const [books, setBooks] = useState(api.library)
+  const [filterArray, setFilterArray] = useState([])
+  const [reading, setReading] = useState(0)
   const [selectedBookTitle, setSelectedBookTitle] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [selectedPages, setSelectedPages] = useState(30);
-  const [maxPages, setMaxPages] = useState(0);
-  const [minPages, setMinPages] = useState(0);
-  const [disabledBooks, setDisabledBooks] = useState([]);
+  const [maxPages, setMaxPages] = useState(0)
+  const [minPages, setMinPages] = useState(0)
+  const initBooks = () => JSON.parse(localStorage.getItem('readingList'));
+  const [disabledBooks, setDisabledBooks] = useState(initBooks() ? initBooks : [] );
 
   useEffect(() => {
+    // Recuperar datos de localStorage cuando se carga la página
+    if (disabledBooks) {
+      setReading(disabledBooks.length);
+    }
     setFilterArray(api.library);
     maxAndMinPages();
   }, []);
+
+  useEffect(() => {
+    // Guardar datos en localStorage cuando la lista de lectura cambie
+    localStorage.setItem('readingList', JSON.stringify(disabledBooks));
+  }, [disabledBooks]);
+
 
   const handleGenreFilter = (event) => {
     const selectedGenreValue = event.target.value;
@@ -34,30 +43,33 @@ function App() {
       const filterArray = api.library.filter(
         (book) => book.book.genre.trim().toLowerCase() === selectedGenreValue.trim().toLowerCase()
       );
+      setBooks(filterArray)
       setFilterArray(filterArray);
-      maxAndMinPages();
+      maxAndMinPages()
     } else {
+      setBooks(api.library)
       setFilterArray(api.library);
     }
   };
 
   const maxAndMinPages = () => {
-    let max = 0;
-    let min = 10000;
-    api.library.forEach((book) => {
+    let max = 0
+    let min = 10000
+    books.map((book) => {
       if (book.book.pages > max) {
-        max = book.book.pages;
-      } else if (book.book.pages < min) {
-        min = book.book.pages;
+        max = book.book.pages
       }
-    });
-    setMaxPages(max);
-    setMinPages(min);
-  };
+      else if (book.book.pages < min) {
+        min = book.book.pages
+      }
+    })
+    setMaxPages(max)
+    setMinPages(min)
+  }
 
   const handlePagesFilter = (value) => {
     setSelectedPages(value);
-    const preArray = api.library;
+    const preArray = books
     const filterArray = preArray.filter((book) => book.book.pages <= value);
     setFilterArray(filterArray);
   };
@@ -73,6 +85,7 @@ function App() {
       setReading(reading + 1);
       setDisabledBooks([...disabledBooks, book.book.title]);
     }
+
   };
 
   return (
@@ -80,13 +93,13 @@ function App() {
       <div>
         <div style={{ paddingLeft: "10px" }}>
           <h1>{books.length - disabledBooks.length} Libros disponibles</h1>
-          {reading > 0 ? (
-            <h3 style={{ paddingLeft: "10px" }}>{reading} en lista de lectura</h3>
-          ) : (
-            <></>
-          )}
+          {
+            reading > 0 ?
+              <h3 style={{ paddingLeft: "10px" }}>{reading} en lista de lectura</h3>
+              :
+              <></>
+          }
         </div>
-
         <div className='filters'>
           <div style={{ paddingRight: "80px" }}>
             <span>Filtro por páginas</span>
@@ -133,11 +146,13 @@ function App() {
       {reading > 0 && (
         <ReadingList
           searchValue={selectedBookTitle}
+          onAddBook={handleAddToReadingList}
           onRemoveBook={handleRemoveFromReadingList}
+          disabledBooks={disabledBooks}
         />
       )}
     </div>
   )
 }
 
-export default App;
+export default App
