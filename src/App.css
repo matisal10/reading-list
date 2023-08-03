@@ -16,6 +16,10 @@
     padding-left: 20px;
 }
 
+.filterPage{
+    padding-right: 80px;
+}
+
 option {
     color: black;
 }
@@ -38,7 +42,7 @@ option {
 .disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
+}
 
 .book {
     transform: scale(var(--escala, 1));
@@ -55,13 +59,13 @@ option {
     max-width: 30%;
     min-height: 80vh;
     height: fit-content;
-    margin: 168px 14px 0px 0px;
+    margin: 192px 14px 0px 0px;
     background-color: rgb(32, 32, 49);
     border-radius: 5px;
     padding: 10px;
 }
 
-.containerReading>h1{
+.containerReading>h1 {
     color: white;
 }
 
@@ -74,7 +78,7 @@ option {
     margin-top: 20px;
 }
 
-.containerIcon{
+.containerIcon {
     background-color: white;
     /* padding: 5px; */
     position: absolute;
@@ -83,8 +87,31 @@ option {
     color: black;
 }
 
-.icon{
-    
+.icon {
+
     /* background-color: aliceblue; */
     /* padding: 10px; */
+}
+
+@media (width < 500px) {
+    img {
+        width: 100px;
+        height: 150px !important;
+    }
+
+    .filterPage{
+        padding-right: 50px;
+    }
+
+    .containerReading {
+        width: 526px;
+        margin-top: 264px;
+    }
+
+    .containerReading>h1 {
+        font-size: xx-large;
+    }
+    .containerIcon {
+        margin: -10px 60px;
+    }
 }

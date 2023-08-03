@@ -101,7 +101,7 @@ function App() {
           }
         </div>
         <div className='filters'>
-          <div style={{ paddingRight: "80px" }}>
+          <div className='filterPage'>
             <span>Filtro por páginas</span>
             <Slider
               aria-label='slider-ex-1'
